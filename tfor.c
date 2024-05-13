@@ -586,6 +586,7 @@ int	fix_dec_var1();
 int	fix_dec_var2();
 int	p_src();
 int	es_cadena_valida(int,char *);
+int	tiene_coment_intermedio (char *);
 
 
 
@@ -5570,7 +5571,7 @@ int	*ql_f;
 
 	int	i,j,k;
 	int	p1,p2;
-	int	f1,f2,f3;
+	int	f1,f2,f3,f4;
 	int	qi,qf;
 
 	char	b1[MAXB];
@@ -5609,10 +5610,13 @@ int	*ql_f;
 			 * parar con error 
 			 */
 
+#if 0
+			/* si tiene linea comentada con simb cont, le pongo continuacion igual */
 			if ( b1[0] == 'C' || b1[0] == 'c' || b1[0] == '!')
 			{	printf ("Linea %d tiene comentario y siguiente con + \n",i);
 				error(801);
 			}
+#endif
 
 			if (gp_fverbose("d3"))
 			{
@@ -5622,14 +5626,42 @@ int	*ql_f;
 			}
 
 			/* tengo que arreglar ambas lineas */
+printf (" / / / / b3:1  |%s| q_tk: %d \n",b3,q_tk);
 			memset (b3,0,MAXB);
 			for (j=0; j< q_tk; j++)
 				strcat (b3,tk[j]);
+printf (" / / / / b3:2  |%s| q_tk: %d \n",b3,q_tk);
 
+			if (tiene_coment_intermedio (b3) )
+			{
+printf ("tiene ! intermedio ! |%s| \n",b3);
+
+				for (j=2, f4=1; f4 && j<q_tk; j++)
+				{
+					if (!strcmp(tk[j],"!"))
+					{
+						sprintf (tk[j],"& ! ");
+printf ("quedo: |%s| \n",tk[j]);
+						f4=0;
+					}
+				}
+			}
+			else
+			{
+/* EEE */
+							
 			memset(tk[q_tk],0,MAXB);
-			strncpy(tk[q_tk++],b4,78-strlen(b3));
+printf (" / / / / b3:3  |%s| q_tk: %d \n",b3,q_tk);
+printf ("strelen(b3) : %d\n",strlen(b3));
+
+			strncpy(tk[q_tk++],b4,90-strlen(b3));
+printf (" / / / / tk sig1;  |%s| \n",tk[q_tk-1]);
 			sprintf (tk[q_tk++],"&");
+printf (" / / / / tk sig2;  |%s| \n",tk[q_tk-1]);
 			
+			}
+
+
 			/* me falta la linea siguiente con el + */
 			/* q&d ... no time */
 			f1=1;
@@ -5647,6 +5679,7 @@ int	*ql_f;
 
 
 		/* armo la linea de nuevo con todos los tokens */
+printf (" / / / / b3:3  |%s| \n",b3);
 		memset (b3,0,MAXB);
 		for (j=0; j< q_tk; j++)
 			strcat (b3,tk[j]);
@@ -5654,10 +5687,26 @@ int	*ql_f;
 		if (gp_fverbose("d2"))
 			printf ("fix: |%s|\n",b3);
 
+printf (" / / / / b3:4  |%s| \n",b3);
 
 		/* copio la segunda linea, sin el mas */
 		strcpy ( (*fnp[i+1]).l, b2);
 	}
+}
+
+
+
+int	tiene_coment_intermedio (s)
+char	*s;
+{
+	int 	i,j,k;
+	int	f1;
+
+	f1=0;
+	for (i=0; i<strlen(s); i++)
+		if (s[i] == '!')
+			f1 = 1;
+	return f1;
 }
 
 
