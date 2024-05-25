@@ -1,16 +1,44 @@
+# Variables
+PROJECT   = csrc
+SRC_DIR   = ~/wrk/$(PROJECT)
+BLD_DIR   = ~/wrk/$(PROJECT)
+BIN_DIR   = ~/wrk/$(PROJECT)
+EXEC      = cnv_f01 cnv_f02 preg1 preg2 preg3
 
-all:		cnv_f01 cnv_f02
+# Comandos
+CC      = gcc
+#CFLAGS = -Wall -O2
+CFLAGS  = 
 
+# Tareas
+.PHONY: all clean 
+
+all: 		$(EXEC)
 
 clean:
-		rm *.exe
+	@echo "Borrando files temporarios ... "
+	@rm -f *.o *.exe *.log log
+	@echo "Listo ..."
 
 
-cnv_f01:	cnv_f01.c
-		gcc -o cnv_f01 cnv_f01.c
+# para compilar .c a .o
+$(BLD_DIR)/%.o:	$(SRC_DIR)/%.c
+		$(CC) $(CFLAGS) -c -o $@ $<
 
-cnv_f02:	cnv_f02.c
-		gcc -o cnv_f02 cnv_f02.c
+# para link de objetos a exe
+$(BLD_DIR)/%: 	$(BLD_DIR)/%.o
+		$(CC) $(CFLAGS) -o $@ $^
+
+
+
+
+
+
+
+
+
+
+
 
 
 

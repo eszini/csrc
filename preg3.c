@@ -1,7 +1,9 @@
 
+#include <stdio.h>
 #include <regex.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <string.h>
+
 regex_t regex;
 int reti;
 char msgbuf[1024];
@@ -35,7 +37,6 @@ int main(int argc, char const *argv[])
 		{
 			c = s[p1 + i];
 			k = 0;
-
 			
 			if ( c >= 'a' && c <= 'z' )
 				k = 1;
@@ -51,23 +52,15 @@ int main(int argc, char const *argv[])
 
 			switch (k)
 			{
-				case:	1
+				case	1:
 					break;
 
-				case:	2
-					break;
-
+				case	2:
 
 			}			
-			
-
-
 		}
-
-
-
 	}
-	
+    }
 }
 
 
